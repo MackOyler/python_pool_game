@@ -13,6 +13,7 @@ pygame.display.set_caption("Pool")
 
 #pm space
 space = pymunk.Space()
+static_body = space.static_body
 draw_options = pymunk.pygame_util.DrawOptions(screen)
 
 clock = pygame.time.Clock()
@@ -25,13 +26,16 @@ def create_ball(radius, pos):
     body.position = pos
     shape = pymunk.Circle(body, radius)
     shape.mass = 5
+    pivot = pymunk.PivotJoint(static_body, body, (0, 0), (0, 0))
+    pivot.max_bias = 0
+    pivot.max_force = 1000
     
-    space.add(body, shape)
+    space.add(body, shape, pivot)
     return shape
 
 new_ball = create_ball(25, (300, 300))
 
-cue_ball = create_ball(25, (600, 300))
+cue_ball = create_ball(25, (600, 310))
 
 #loop
 run = True
@@ -43,7 +47,7 @@ while run:
     
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
-            cue_ball.body.apply_impulse_at_local_point((-500, 0), (0, 0))
+            cue_ball.body.apply_impulse_at_local_point((-1500, 0), (0, 0))
         if event.type == pygame.QUIT:
             run = False
             
