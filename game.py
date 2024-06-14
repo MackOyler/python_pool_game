@@ -15,6 +15,11 @@ pygame.display.set_caption("Pool")
 space = pymunk.Space()
 draw_options = pymunk.pygame_util.DrawOptions(screen)
 
+clock = pygame.time.Clock()
+FPS = 120
+
+BG = (50, 50, 50)
+
 def create_ball(radius, pos):
     body = pymunk.Body()
     body.position = pos
@@ -24,12 +29,21 @@ def create_ball(radius, pos):
     space.add(body, shape)
     return shape
 
-new_ball = create_ball(25, (300, 100))
+new_ball = create_ball(25, (300, 300))
+
+cue_ball = create_ball(25, (600, 300))
 
 #loop
 run = True
 while run:
+    
+    clock.tick(FPS)
+    space.step(1 / FPS)
+    screen.fill(BG)
+    
     for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            cue_ball.body.apply_impulse_at_local_point((-500, 0), (0, 0))
         if event.type == pygame.QUIT:
             run = False
             
