@@ -30,6 +30,7 @@ def create_ball(radius, pos):
     body.position = pos
     shape = pymunk.Circle(body, radius)
     shape.mass = 5
+    shape.elasticity = 0.8
     pivot = pymunk.PivotJoint(static_body, body, (0, 0), (0, 0))
     pivot.max_bias = 0
     pivot.max_force = 1000
@@ -51,10 +52,12 @@ cushions = [
   [(1143, 96), (1122, 117), (1122, 560), (1143, 581)]
 ]
 
+#function for said cushions
 def create_cushion(poly_dims):
     body = pymunk.Body(body_type = pymunk.Body.STATIC)
     body.position = ((0, 0))
     shape = pymunk.Poly(body, poly_dims)
+    shape.elasticity = 0.8
     
     space.add(body, shape)
 
