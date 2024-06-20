@@ -70,16 +70,16 @@ balls.append(cue_ball)
 #table cushion creation
 cushions = [
     [(88, 56), (109, 77), (555, 77), (564, 56)],
-  [(621, 56), (630, 77), (1081, 77), (1102, 56)],
-  [(89, 621), (110, 600),(556, 600), (564, 621)],
-  [(622, 621), (630, 600), (1081, 600), (1102, 621)],
-  [(56, 96), (77, 117), (77, 560), (56, 581)],
-  [(1143, 96), (1122, 117), (1122, 560), (1143, 581)]
+    [(621, 56), (630, 77), (1081, 77), (1102, 56)],
+    [(89, 621), (110, 600),(556, 600), (564, 621)],
+    [(622, 621), (630, 600), (1081, 600), (1102, 621)],
+    [(56, 96), (77, 117), (77, 560), (56, 581)],
+    [(1143, 96), (1122, 117), (1122, 560), (1143, 581)]
 ]
 
 #function for said cushions
 def create_cushion(poly_dims):
-    body = pymunk.Body(body_type = pymunk.Body.STATIC)
+    body = pymunk.Body(body_type=pymunk.Body.STATIC)
     body.position = ((0, 0))
     shape = pymunk.Poly(body, poly_dims)
     shape.elasticity = 0.8
@@ -134,14 +134,14 @@ while run:
             taking_shot = False 
                
     #pool cue
-if taking_shot == True:    
-    mouse_pos = pygame.mouse.get_pos()
-    cue.rect.center = balls[-1].body.position
-    x_dist = balls[-1].body.position[0] - mouse_pos[0]
-    y_dist = -(balls[-1].body.position[1] - mouse_pos[1]) #inverted for pygame y-coordinates ++ dwn scrn"
-    cue_angle = math.degrees(math.atan2(y_dist, x_dist))
-    cue.update(cue_angle)
-    cue.draw(screen)
+    if taking_shot == True:    
+        mouse_pos = pygame.mouse.get_pos()
+        cue.rect.center = balls[-1].body.position
+        x_dist = balls[-1].body.position[0] - mouse_pos[0]
+        y_dist = -(balls[-1].body.position[1] - mouse_pos[1])  # inverted for pygame y-coordinates ++ dwn scrn"
+        cue_angle = math.degrees(math.atan2(y_dist, x_dist))
+        cue.update(cue_angle)
+        cue.draw(screen)
     
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
