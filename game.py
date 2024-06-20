@@ -23,6 +23,8 @@ FPS = 120
 
 #variables 
 dia = 36
+force = 2000
+taking_shot = True
 
 #colors
 BG = (50, 50, 50)
@@ -117,6 +119,7 @@ while run:
    
     #background 
     screen.fill(BG)
+    
     #pool table
     screen.blit(table_image, (0, 0))
     
@@ -124,8 +127,16 @@ while run:
     for i, ball in enumerate(balls):
         screen.blit(ball_images[i], (ball.body.position[0] - ball.radius, ball.body.position[1] - ball.radius))
         
+    #ball mvmnt check
+    taking_shot = True
+    for ball in balls:
+        if int(ball.body.velocity[0]) != 0 or int(ball.body.velocity[1]) != 0:
+            taking_shot = False 
+               
     #pool cue
+if taking_shot == True:    
     mouse_pos = pygame.mouse.get_pos()
+    cue.rect.center = balls[-1].body.position
     x_dist = balls[-1].body.position[0] - mouse_pos[0]
     y_dist = -(balls[-1].body.position[1] - mouse_pos[1]) #inverted for pygame y-coordinates ++ dwn scrn"
     cue_angle = math.degrees(math.atan2(y_dist, x_dist))
@@ -134,7 +145,9 @@ while run:
     
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
-            cue_ball.body.apply_impulse_at_local_point((-1500, 0), (0, 0))
+            x_impulse = math.cos(math.radians(cue_angle))
+            y_impulse = math.sin(math.radians(cue_angle))
+            balls[-1].body.apply_impulse_at_local_point((force * x_impulse, force * y_impulse), (0, 0))
         if event.type == pygame.QUIT:
             run = False
             
