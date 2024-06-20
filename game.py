@@ -1,6 +1,7 @@
 import pygame
 import pymunk
 import pymunk.pygame_util
+import math
 
 pygame.init()
 
@@ -27,6 +28,7 @@ dia = 36
 BG = (50, 50, 50)
 
 #images to load
+cue_image = pygame.image.load("assets/images/cue.png").convert_alpha()
 table_image = pygame.image.load("assets/images/table.png").convert_alpha()
 ball_images = []
 
@@ -85,6 +87,27 @@ def create_cushion(poly_dims):
 for c in cushions:
     create_cushion(c)
 
+#create cue ball
+class Cue():
+    def __init__(self, pos):
+        self.original_image = cue_image
+        self.angle = 0
+        self.image = pygame.transform.rotate(self.original_image, self.angle)
+        self.rect = self.image.get_rect()
+        self.rect.center = pos
+        
+    def update(self, angle):
+        self.angle = angle
+        
+    def draw(self, surface):
+        self.image = pygame.transform.rotate(self.original_image, self.angle)
+        surface.blit(self.image,
+                     (self.rect.centerx - self.image.get_width() / 2,
+                      self.rect.centery - self.image.get_height() / 2)
+                     )
+
+cue = Cue(balls[-1].body.position)
+
 #game loop
 run = True
 while run:
@@ -100,6 +123,14 @@ while run:
     #pool balls
     for i, ball in enumerate(balls):
         screen.blit(ball_images[i], (ball.body.position[0] - ball.radius, ball.body.position[1] - ball.radius))
+        
+    #pool cue
+    mouse_pos = pygame.mouse.get_pos()
+    x_dist = balls[-1].body.position[0] - mouse_pos[0]
+    y_dist = -(balls[-1].body.position[1] - mouse_pos[1]) #inverted for pygame y-coordinates ++ dwn scrn"
+    cue_angle = math.degrees(math.atan2(y_dist, x_dist))
+    cue.update(cue_angle)
+    cue.draw(screen)
     
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -107,7 +138,7 @@ while run:
         if event.type == pygame.QUIT:
             run = False
             
-    space.debug_draw(draw_options)
+    #space.debug_draw(draw_options)
     pygame.display.update()
             
 pygame.quit()
