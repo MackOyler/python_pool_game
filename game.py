@@ -19,7 +19,11 @@ draw_options = pymunk.pygame_util.DrawOptions(screen)
 clock = pygame.time.Clock()
 FPS = 120
 
+#colors
 BG = (50, 50, 50)
+
+#images to load
+table_image = pygame.image.load()
 
 def create_ball(radius, pos):
     body = pymunk.Body()
