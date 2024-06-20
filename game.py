@@ -23,7 +23,7 @@ FPS = 120
 BG = (50, 50, 50)
 
 #images to load
-table_image = pygame.image.load()
+table_image = pygame.image.load("assets/images/table.png").convert_alpha()
 
 def create_ball(radius, pos):
     body = pymunk.Body()
@@ -41,13 +41,15 @@ new_ball = create_ball(25, (300, 300))
 
 cue_ball = create_ball(25, (600, 310))
 
-#loop
+#game loop
 run = True
 while run:
     
     clock.tick(FPS)
     space.step(1 / FPS)
+    
     screen.fill(BG)
+    screen.blit(table_image, (0, 0))
     
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
