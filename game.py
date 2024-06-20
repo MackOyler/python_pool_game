@@ -28,6 +28,11 @@ BG = (50, 50, 50)
 
 #images to load
 table_image = pygame.image.load("assets/images/table.png").convert_alpha()
+ball_images = []
+
+for i in range(1, 17):
+    ball_image = pygame.image.load(f"assets/images/ball_{i}.png").convert_alpha()
+    ball_images.append(ball_image)
 
 def create_ball(radius, pos):
     body = pymunk.Body()
@@ -86,9 +91,15 @@ while run:
     
     clock.tick(FPS)
     space.step(1 / FPS)
-    
+   
+    #background 
     screen.fill(BG)
+    #pool table
     screen.blit(table_image, (0, 0))
+    
+    #pool balls
+    for i, ball in enumerate(balls):
+        screen.blit(ball_images[i], (ball.body.position[0] - ball.radius, ball.body.position[1] - ball.radius))
     
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
