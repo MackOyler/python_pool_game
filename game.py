@@ -41,6 +41,21 @@ new_ball = create_ball(25, (300, 300))
 
 cue_ball = create_ball(25, (600, 310))
 
+#table cushion creation
+cushions = [
+    [(88, 56), (109, 77), (555, 77), (564, 56)]
+]
+
+def create_cushion(poly_dims):
+    body = pymunk.Body(body_type = pymunk.Body.STATIC)
+    body.position = ((0, 0))
+    shape = pymunk.Poly(body, poly_dims)
+    
+    space.add(body, shape)
+
+for c in cushions:
+    create_cushion(c)
+
 #game loop
 run = True
 while run:
