@@ -16,8 +16,12 @@ space = pymunk.Space()
 static_body = space.static_body
 draw_options = pymunk.pygame_util.DrawOptions(screen)
 
+#clock
 clock = pygame.time.Clock()
 FPS = 120
+
+#variables 
+dia = 36
 
 #colors
 BG = (50, 50, 50)
@@ -38,9 +42,21 @@ def create_ball(radius, pos):
     space.add(body, shape, pivot)
     return shape
 
-new_ball = create_ball(25, (300, 300))
+#game ball setup
+balls = []
+rows = 5
 
-cue_ball = create_ball(25, (600, 310))
+for col in range(5):
+    for row in range(rows):
+        pos = (250 + (col * (dia + 1)), 267 + (row * (dia + 1)) + (col * dia / 2))
+        new_ball = create_ball(dia / 2, pos)
+        balls.append(new_ball)
+    rows -= 1
+
+#cue ball
+pos = (888, SCREEN_HEIGHT / 2)
+cue_ball = create_ball(dia / 2, pos)
+balls.append(cue_ball)
 
 #table cushion creation
 cushions = [
