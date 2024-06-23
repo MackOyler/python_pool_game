@@ -23,11 +23,14 @@ clock = pygame.time.Clock()
 FPS = 120
 
 #variables 
+lives = 3
 dia = 36
 pocket_dia = 66
 force = 0
 max_force = 10000
 force_direction = 1
+game_running = True
+cue_ball_sunk = False
 taking_shot = True
 powering_up = False
 sunk_balls = []
@@ -35,6 +38,11 @@ sunk_balls = []
 #colors
 BG = (50, 50, 50)
 RED = (255, 0, 0)
+WHITE = (255, 255, 255)
+
+#fonts
+font = pygame.font.SysFont("Lato", 30)
+large_font = pygame.font.SysFont("Lato", 60)
 
 #images to load
 cue_image = pygame.image.load("assets/images/cue.png").convert_alpha()
@@ -44,6 +52,11 @@ ball_images = []
 for i in range(1, 17):
     ball_image = pygame.image.load(f"assets/images/ball_{i}.png").convert_alpha()
     ball_images.append(ball_image)
+
+# display lives on screen
+def draw_text(text, font, text_col, x, y):
+    img = font.render(text, True, text_col)
+    screen.blit(img, (x, y))
 
 def create_ball(radius, pos):
     body = pymunk.Body()
@@ -151,10 +164,17 @@ while run:
             ball_y_dist = abs(ball.body.position[1] - pocket[1])
             ball_dist = math.sqrt((ball_x_dist ** 2) + (ball_y_dist ** 2))
             if ball_dist <= pocket_dia / 2:
-                space.remove(ball.body)
-                balls.remove(ball)
-                sunk_balls.append(ball_images[i])
-                ball_images.pop(i)
+                # check for cue ball
+                if i == len(balls) - 1:
+                    lives -= 1
+                    cue_ball_sunk = True
+                    ball.body.position = (-100, -100)
+                    ball.body.velocity = (0.0, 0.0)
+                else:
+                    space.remove(ball.body)
+                    balls.remove(ball)
+                    sunk_balls.append(ball_images[i])
+                    ball_images.pop(i)
     
     #pool balls
     for i, ball in enumerate(balls):
@@ -167,7 +187,11 @@ while run:
             taking_shot = False 
                
     #pool cue
-    if taking_shot == True:    
+    if taking_shot == True:
+        if cue_ball_sunk == True:
+            balls[-1].body.position = (888, SCREEN_HEIGHT / 2)
+            cue_ball_sunk = False
+            
         mouse_pos = pygame.mouse.get_pos()
         cue.rect.center = balls[-1].body.position
         x_dist = balls[-1].body.position[0] - mouse_pos[0]
@@ -194,10 +218,16 @@ while run:
     
     #draw bottom panel
     pygame.draw.rect(screen, BG, (0, SCREEN_HEIGHT, SCREEN_WIDTH, BOTTOM_PANEL))
+    draw_text("LIVES: " + str(lives), font, WHITE, SCREEN_WIDTH - 200, SCREEN_HEIGHT + 10)  
     
     #display sunk pool balls in bottom panel
     for i, ball in enumerate(sunk_balls):
         screen.blit(ball, (10 + (i * 50), SCREEN_HEIGHT + 10))
+    
+    # check number of lives; game over?
+    if lives <= 0:
+        draw_text("GAME OVER", large_font, WHITE, SCREEN_WIDTH / 2 - 160, SCREEN_HEIGHT / 2 - 100)
+        game_running = False
     
     #event handler
     for event in pygame.event.get():
