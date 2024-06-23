@@ -192,6 +192,9 @@ while run:
         force = 0
         force_direction = 1
     
+    #draw bottom panel
+    pygame.draw.rect(screen, BG, (0, SCREEN_HEIGHT, SCREEN_WIDTH, BOTTOM_PANEL))
+    
     #display sunk pool balls in bottom panel
     for i, ball in enumerate(sunk_balls):
         screen.blit(ball, (10 + (i * 50), SCREEN_HEIGHT + 10))
