@@ -24,11 +24,14 @@ FPS = 120
 #variables 
 dia = 36
 force = 0
+max_force = 10000
+force_direction = 1
 taking_shot = True
 powering_up = False
 
 #colors
 BG = (50, 50, 50)
+RED = (255, 0, 0)
 
 #images to load
 cue_image = pygame.image.load("assets/images/cue.png").convert_alpha()
@@ -111,6 +114,10 @@ class Cue():
 
 cue = Cue(balls[-1].body.position)
 
+#power bar 
+power_bar = pygame.Surface((10, 20))
+power_bar.fill(RED)
+
 #game loop
 run = True
 while run:
@@ -146,13 +153,19 @@ while run:
         
     #power up
     if powering_up == True:
-        force += 100
-        print(force)
+        force += 100 * force_direction
+        if force >= max_force or force <= 0:
+            force_direction *= -1
+    #power bar on screen
+        for b in range(math.ceil(force / 2000)):
+            screen.blit(power_bar, (balls[-1].body.position[0] -30 + (b * 15), balls[-1].body.position[1] + 30))
+
     elif powering_up == False and taking_shot == True:               
         x_impulse = math.cos(math.radians(cue_angle))
         y_impulse = math.sin(math.radians(cue_angle))
         balls[-1].body.apply_impulse_at_local_point((force * -x_impulse, force * y_impulse), (0, 0))
         force = 0
+        force_direction = 1
     
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN and taking_shot == True:
