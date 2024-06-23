@@ -23,7 +23,7 @@ FPS = 120
 
 #variables 
 dia = 36
-force = 2000
+force = 0
 taking_shot = True
 powering_up = False
 
@@ -143,17 +143,23 @@ while run:
         cue_angle = math.degrees(math.atan2(y_dist, x_dist))
         cue.update(cue_angle)
         cue.draw(screen)
+        
+    #power up
+    if powering_up == True:
+        force += 100
+        print(force)
+    elif powering_up == False and taking_shot == True:               
+        x_impulse = math.cos(math.radians(cue_angle))
+        y_impulse = math.sin(math.radians(cue_angle))
+        balls[-1].body.apply_impulse_at_local_point((force * -x_impulse, force * y_impulse), (0, 0))
+        force = 0
     
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN and taking_shot == True:
             powering_up = True
         if event.type == pygame.MOUSEBUTTONUP and taking_shot == True:
             powering_up = False
-            
-            x_impulse = math.cos(math.radians(cue_angle))
-            y_impulse = math.sin(math.radians(cue_angle))
-            balls[-1].body.apply_impulse_at_local_point((force * -x_impulse, force * y_impulse), (0, 0))
-            
+        
         if event.type == pygame.QUIT:
             run = False
             
