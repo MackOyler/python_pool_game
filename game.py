@@ -7,9 +7,10 @@ pygame.init()
 
 SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 678
+BOTTOM_PANEL = 50
 
 #window
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT + BOTTOM_PANEL))
 pygame.display.set_caption("Pool")
 
 #pm space
@@ -191,6 +192,11 @@ while run:
         force = 0
         force_direction = 1
     
+    #display sunk pool balls in bottom panel
+    for i, ball in enumerate(sunk_balls):
+        screen.blit(ball, (10 + (i * 50), SCREEN_HEIGHT + 10))
+    
+    #event handler
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN and taking_shot == True:
             powering_up = True
