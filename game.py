@@ -23,11 +23,13 @@ FPS = 120
 
 #variables 
 dia = 36
+pocket_dia = 66
 force = 0
 max_force = 10000
 force_direction = 1
 taking_shot = True
 powering_up = False
+sunk_balls = []
 
 #colors
 BG = (50, 50, 50)
@@ -70,6 +72,16 @@ for col in range(5):
 pos = (888, SCREEN_HEIGHT / 2)
 cue_ball = create_ball(dia / 2, pos)
 balls.append(cue_ball)
+
+#table pockets
+pockets = [
+    (55, 63),
+    (592, 48), 
+    (1134, 64),
+    (55, 616),
+    (592, 629),
+    (1134, 616)
+]
 
 #table cushion creation
 cushions = [
@@ -130,6 +142,18 @@ while run:
     
     #pool table
     screen.blit(table_image, (0, 0))
+    
+    #check for sunk balls
+    for i, ball in enumerate(balls):
+        for pocket in pockets:
+            ball_x_dist = abs(ball.body.position[0] - pocket[0])
+            ball_y_dist = abs(ball.body.position[1] - pocket[1])
+            ball_dist = math.sqrt((ball_x_dist ** 2) + (ball_y_dist ** 2))
+            if ball_dist <= pocket_dia / 2:
+                space.remove(ball.body)
+                balls.remove(ball)
+                sunk_balls.append(ball_images[i])
+                ball_images.pop(i)
     
     #pool balls
     for i, ball in enumerate(balls):
