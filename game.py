@@ -187,7 +187,7 @@ while run:
             taking_shot = False 
                
     #pool cue
-    if taking_shot == True:
+    if taking_shot == True and game_running == True:
         if cue_ball_sunk == True:
             balls[-1].body.position = (888, SCREEN_HEIGHT / 2)
             cue_ball_sunk = False
@@ -201,7 +201,7 @@ while run:
         cue.draw(screen)
         
     #power up
-    if powering_up == True:
+    if powering_up == True and game_running == True:
         force += 100 * force_direction
         if force >= max_force or force <= 0:
             force_direction *= -1
@@ -227,6 +227,11 @@ while run:
     # check number of lives; game over?
     if lives <= 0:
         draw_text("GAME OVER", large_font, WHITE, SCREEN_WIDTH / 2 - 160, SCREEN_HEIGHT / 2 - 100)
+        game_running = False
+        
+    # check if all balls are sunk
+    if len(balls) == 1:
+        draw_text("YOU WIN!", large_font, WHITE, SCREEN_WIDTH / 2 - 160, SCREEN_HEIGHT / 2 - 100)
         game_running = False
     
     #event handler
